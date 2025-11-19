@@ -1,8 +1,8 @@
-import { Prisma } from "@prisma/client"
 import { prisma } from "@/database/db"
 import { generateCode } from "@/lib/generateCode"
 import { createLinkValidation } from "@/lib/validation"
 import { NextRequest, NextResponse } from "next/server"
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library.js"
 
 export async function POST(request: NextRequest) {
     try {
@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json(link, { status: 201 })
 
     } catch (error: any) {
-        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error instanceof PrismaClientKnownRequestError) {
             if (error.code === 'P2002') {
                 return NextResponse.json(
                     { error: 'Code already exists', stausCode: 409 },
