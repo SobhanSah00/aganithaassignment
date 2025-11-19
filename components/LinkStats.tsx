@@ -34,11 +34,9 @@ export function LinkStats({ link }: LinkStatsProps) {
     setTimeout(() => setCopied(false), 1500)
   }
 
-  // Process analytics data
   const analyticsData = useMemo(() => {
     if (!link.analytics?.daily) return []
     
-    // Aggregate clicks by date
     const dateMap = new Map<string, number>()
     link.analytics.daily.forEach(item => {
       const current = dateMap.get(item.date) || 0
@@ -54,7 +52,6 @@ export function LinkStats({ link }: LinkStatsProps) {
 
   return (
     <div className="space-y-6">
-      {/* Page Title */}
       <div className="mb-8">
         <div className="flex items-center gap-2 mb-3">
           <BarChart3 className="w-6 h-6 text-zinc-400" />
@@ -63,7 +60,6 @@ export function LinkStats({ link }: LinkStatsProps) {
         <code className="text-lg text-zinc-400 font-mono">/{link.code}</code>
       </div>
 
-      {/* URL Information Card */}
       <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6 hover:border-zinc-700 transition-all">
         <div className="flex items-start justify-between gap-4 mb-6">
           <div className="flex-1 min-w-0">
@@ -99,9 +95,9 @@ export function LinkStats({ link }: LinkStatsProps) {
         </div>
       </div>
 
-      {/* Stats Grid */}
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Total Clicks */}
+
         <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6 hover:border-zinc-700 transition-all">
           <div className="flex items-center gap-3 mb-3">
             <div className="p-2 bg-blue-500/10 rounded-lg">
@@ -112,7 +108,7 @@ export function LinkStats({ link }: LinkStatsProps) {
           <div className="text-3xl font-bold">{link.clicks.toLocaleString()}</div>
         </div>
 
-        {/* Average Daily */}
+       
         <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6 hover:border-zinc-700 transition-all">
           <div className="flex items-center gap-3 mb-3">
             <div className="p-2 bg-green-500/10 rounded-lg">
@@ -127,7 +123,6 @@ export function LinkStats({ link }: LinkStatsProps) {
           </div>
         </div>
 
-        {/* Created Date */}
         <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6 hover:border-zinc-700 transition-all">
           <div className="flex items-center gap-3 mb-3">
             <div className="p-2 bg-purple-500/10 rounded-lg">
@@ -138,7 +133,6 @@ export function LinkStats({ link }: LinkStatsProps) {
           <div className="text-lg font-semibold">{formatDate(link.createdAt)}</div>
         </div>
 
-        {/* Last Clicked */}
         <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6 hover:border-zinc-700 transition-all">
           <div className="flex items-center gap-3 mb-3">
             <div className="p-2 bg-orange-500/10 rounded-lg">
@@ -152,10 +146,8 @@ export function LinkStats({ link }: LinkStatsProps) {
         </div>
       </div>
 
-      {/* Charts Section */}
       {analyticsData.length > 0 && (
         <>
-          {/* Bar Chart */}
           <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6 hover:border-zinc-700 transition-all">
             <h3 className="text-lg font-semibold mb-6 flex items-center gap-2">
               <BarChart3 className="w-5 h-5 text-zinc-400" />
@@ -184,37 +176,6 @@ export function LinkStats({ link }: LinkStatsProps) {
             </div>
           </div>
 
-          {/* Line Chart (ASCII Style) */}
-          <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6 hover:border-zinc-700 transition-all">
-            <h3 className="text-lg font-semibold mb-6 flex items-center gap-2">
-              <TrendingUp className="w-5 h-5 text-zinc-400" />
-              Click Trend
-            </h3>
-            <div className="relative h-48 flex items-end gap-2">
-              {analyticsData.map((item, index) => (
-                <div key={index} className="flex-1 flex flex-col items-center gap-2">
-                  <div className="relative w-full h-full flex items-end">
-                    <div
-                      className="w-full bg-linear-to-t from-blue-500 to-blue-300 rounded-t transition-all duration-500 hover:from-blue-400 hover:to-blue-200"
-                      style={{ height: `${(item.count / maxClicks) * 100}%` }}
-                    >
-                      <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-semibold text-white">
-                        {item.count}
-                      </div>
-                    </div>
-                  </div>
-                  <span className="text-xs text-zinc-500 text-center">
-                    {new Date(item.date).toLocaleDateString('en-US', {
-                      month: 'short',
-                      day: 'numeric',
-                    })}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Summary Stats */}
           <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6 hover:border-zinc-700 transition-all">
             <h3 className="text-lg font-semibold mb-4">Summary</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -253,7 +214,6 @@ export function LinkStats({ link }: LinkStatsProps) {
         </>
       )}
 
-      {/* No Analytics State */}
       {(!analyticsData || analyticsData.length === 0) && (
         <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-12 text-center">
           <BarChart3 className="w-12 h-12 text-zinc-700 mx-auto mb-4" />

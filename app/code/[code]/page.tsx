@@ -13,7 +13,7 @@ export default async function StatsPage(context: { params: Promise<{ code: strin
     cache: 'no-store'
   })
 
-  console.log(res);
+  // console.log(res);
   
   
   if (!res.ok) {
@@ -33,7 +33,7 @@ export default async function StatsPage(context: { params: Promise<{ code: strin
   }
 
   const link = await res.json()
-  // console.log(link);
+  console.log(link);
   
 
   return (
