@@ -31,7 +31,7 @@ export function LinkCard({ link }: LinkCardProps) {
       await navigator.clipboard.writeText(shortUrl)
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
-    } catch (error) {
+    } catch (error: any) {
       setToast({ message: 'Failed to copy', type: 'error' })
     }
   }
@@ -49,7 +49,7 @@ export function LinkCard({ link }: LinkCardProps) {
 
       setToast({ message: 'Link deleted successfully', type: 'success' })
       router.refresh()
-    } catch (error) {
+    } catch (error: any) {
       setToast({ message: 'Failed to delete link', type: 'error' })
       setIsDeleting(false)
     }
@@ -78,8 +78,8 @@ export function LinkCard({ link }: LinkCardProps) {
               </button>
             </div>
 
-            
-              <a href={link.targetUrl}
+
+            <a href={link.targetUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="text-sm text-zinc-400 hover:text-zinc-300 transition-colors flex items-center gap-1 group"
@@ -106,7 +106,7 @@ export function LinkCard({ link }: LinkCardProps) {
                   <BarChart3 className="w-4 h-4" />
                 </Button>
               </Link>
-              
+
               <Button
                 variant="ghost"
                 size="sm"

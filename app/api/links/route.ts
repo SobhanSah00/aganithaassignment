@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
 
 
         const validated = createLinkValidation.safeParse(body)
-        
+
         if (!validated.success) {
             return NextResponse.json(
                 { error: validated.error.message },
@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
 
         return NextResponse.json(link, { status: 201 })
 
-    } catch (error) {
+    } catch (error: any) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
             if (error.code === 'P2002') {
                 return NextResponse.json(
@@ -82,7 +82,7 @@ export async function GET() {
         })
 
         return NextResponse.json(links)
-    } catch (error) {
+    } catch (error: any) {
         console.error('Error fetching links:', error)
         return NextResponse.json(
             { error: 'Internal server error' },

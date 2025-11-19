@@ -26,17 +26,17 @@ export function CreateLinkForm() {
   }
 
   const validateCode = (c: string) => {
-    if (!c) return true 
+    if (!c) return true
     return /^[A-Za-z0-9]{6,8}$/.test(c)
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     setErrors({})
 
     const newErrors: { targetUrl?: string; code?: string } = {}
-    
+
     if (!targetUrl) {
       newErrors.targetUrl = 'URL is required'
     } else if (!validateUrl(targetUrl)) {
@@ -78,13 +78,13 @@ export function CreateLinkForm() {
       setToast({ message: 'Link created successfully!', type: 'success' })
       setTargetUrl('')
       setCode('')
-      
+
       router.refresh()
-      
-    } catch (error) {
-      setToast({ 
-        message: error instanceof Error ? error.message : 'Something went wrong', 
-        type: 'error' 
+
+    } catch (error: any) {
+      setToast({
+        message: error instanceof Error ? error.message : 'Something went wrong',
+        type: 'error'
       })
     } finally {
       setIsLoading(false)
@@ -104,7 +104,7 @@ export function CreateLinkForm() {
               error={errors.targetUrl}
               disabled={isLoading}
             />
-            
+
             <Input
               label="Custom Code (optional)"
               placeholder="mylink"
@@ -115,8 +115,8 @@ export function CreateLinkForm() {
             />
           </div>
 
-          <Button 
-            type="submit" 
+          <Button
+            type="submit"
             disabled={isLoading}
             className="w-full md:w-auto"
           >

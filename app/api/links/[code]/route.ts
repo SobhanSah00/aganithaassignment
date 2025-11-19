@@ -46,7 +46,7 @@ export async function GET(
         }
 
         return NextResponse.json(link)
-    } catch (error) {
+    } catch (error: any) {
         console.error('Error fetching link:', error)
         return NextResponse.json(
             {
@@ -90,7 +90,7 @@ export async function DELETE(
 
         return NextResponse.json({ success: true, deleted })
 
-    } catch (error) {
+    } catch (error: any) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
             if (error.code === 'P2025') {
                 return NextResponse.json(

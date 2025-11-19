@@ -46,7 +46,7 @@ export async function GET(
 
         return NextResponse.redirect(link.targetUrl, { status: 302 })
 
-    } catch (error) {
+    } catch (error: any) {
         console.error('Error redirecting:', error)
         return new NextResponse(null, { status: 404 })
     }
