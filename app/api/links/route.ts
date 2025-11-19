@@ -3,6 +3,7 @@ import { generateCode } from "@/lib/generateCode"
 import { createLinkValidation } from "@/lib/validation"
 import { NextRequest, NextResponse } from "next/server"
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library.js"
+import { revalidatePath } from 'next/cache'
 
 export async function POST(request: NextRequest) {
     try {
@@ -54,6 +55,8 @@ export async function POST(request: NextRequest) {
                 targetUrl,
             },
         })
+        
+        revalidatePath('/')
 
         return NextResponse.json(link, { status: 201 })
 

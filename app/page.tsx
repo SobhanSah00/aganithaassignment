@@ -1,7 +1,9 @@
 import { Suspense } from 'react'
-import { LinksList } from '@/components/Links-list'
+import { LinksListClient } from '@/components/links-list-client'
 import { CreateLinkForm } from '@/components/Create-link-form'
 import { Link as LinkIcon, Zap } from 'lucide-react'
+
+export const dynamic = 'force-dynamic'
 
 export default function Dashboard() {
   return (
@@ -30,7 +32,7 @@ export default function Dashboard() {
         <section>
           <h2 className="text-2xl font-semibold mb-6">Your Links</h2>
           <Suspense fallback={<LinksListSkeleton />}>
-            <LinksList />
+            <LinksListClient />
           </Suspense>
         </section>
       </main>

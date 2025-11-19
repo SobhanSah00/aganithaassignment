@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/database/db'
 import { codeValidation } from '@/lib/validation'
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library.js"
+import { revalidatePath } from 'next/cache'
 
 export async function GET(
   request: NextRequest,
@@ -82,6 +83,8 @@ export async function DELETE(
 
             },
         })
+
+        revalidatePath('/')
 
         return NextResponse.json({ success: true, deleted })
 
