@@ -1,8 +1,13 @@
 'use client'
 
-import { ExternalLink, Check, Copy, BarChart3 } from 'lucide-react'
-import { useState } from 'react'
+import { ExternalLink, Check, Copy, BarChart3, TrendingUp, Calendar, MousePointer, Clock } from 'lucide-react'
+import { useState, useMemo } from 'react'
 import { formatDate } from '@/lib/formatDate'
+
+interface DailyAnalytics {
+  date: string
+  count: number
+}
 
 interface LinkStatsProps {
   link: {
@@ -11,6 +16,10 @@ interface LinkStatsProps {
     clicks: number
     createdAt: Date
     lastClickedAt: Date | null
+    analytics?: {
+      totalEvents: number
+      daily: DailyAnalytics[]
+    }
   }
 }
 
@@ -25,74 +34,235 @@ export function LinkStats({ link }: LinkStatsProps) {
     setTimeout(() => setCopied(false), 1500)
   }
 
+  // Process analytics data
+  const analyticsData = useMemo(() => {
+    if (!link.analytics?.daily) return []
+    
+    // Aggregate clicks by date
+    const dateMap = new Map<string, number>()
+    link.analytics.daily.forEach(item => {
+      const current = dateMap.get(item.date) || 0
+      dateMap.set(item.date, current + item.count)
+    })
+
+    return Array.from(dateMap.entries())
+      .map(([date, count]) => ({ date, count }))
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+  }, [link.analytics])
+
+  const maxClicks = Math.max(...analyticsData.map(d => d.count), 1)
+
   return (
-    <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6 max-w-3xl mx-auto mt-6">
-
-      {/* Header */}
-      <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
-        <h2 className="text-xl font-semibold text-white flex items-center gap-2">
-          <BarChart3 className="w-5 h-5" />
-          Stats for <code className="text-indigo-400">/{link.code}</code>
-        </h2>
-
-        {/* Copy Button */}
-        <button
-          onClick={handleCopy}
-          className="text-zinc-400 hover:text-white transition-colors"
-        >
-          {copied ? (
-            <Check className="w-5 h-5 text-green-500" />
-          ) : (
-            <Copy className="w-5 h-5" />
-          )}
-        </button>
+    <div className="space-y-6">
+      {/* Page Title */}
+      <div className="mb-8">
+        <div className="flex items-center gap-2 mb-3">
+          <BarChart3 className="w-6 h-6 text-zinc-400" />
+          <h1 className="text-3xl font-bold">Link Statistics</h1>
+        </div>
+        <code className="text-lg text-zinc-400 font-mono">/{link.code}</code>
       </div>
 
-      {/* Short URL */}
-      <div className="mb-4">
-        <p className="text-zinc-500 text-xs mb-1">Short URL</p>
-        <code className="text-indigo-300 break-all">{shortUrl}</code>
-      </div>
-
-      {/* Target URL */}
-      <div className="mb-6">
-        <p className="text-zinc-500 text-xs mb-1">Destination</p>
-        <a
-          href={link.targetUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-sm text-zinc-300 hover:text-white flex items-center gap-1 group break-all"
-        >
-          {link.targetUrl}
-          <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
-        </a>
-      </div>
-
-      {/* Responsive Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-
-        {/* Click Count */}
-        <div className="bg-zinc-800/40 border border-zinc-700 rounded-lg p-4 text-center">
-          <div className="text-2xl font-bold text-white">{link.clicks}</div>
-          <div className="text-xs text-zinc-500">Total Clicks</div>
+      {/* URL Information Card */}
+      <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6 hover:border-zinc-700 transition-all">
+        <div className="flex items-start justify-between gap-4 mb-6">
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-4">
+              <p className="text-sm text-zinc-500">Short URL</p>
+              <button
+                onClick={handleCopy}
+                className="text-zinc-500 hover:text-white transition-colors"
+                title="Copy short URL"
+              >
+                {copied ? (
+                  <Check className="w-4 h-4 text-green-500" />
+                ) : (
+                  <Copy className="w-4 h-4" />
+                )}
+              </button>
+            </div>
+            <code className="text-white break-all font-mono">{shortUrl}</code>
+          </div>
         </div>
 
-        {/* Created At */}
-        <div className="bg-zinc-800/40 border border-zinc-700 rounded-lg p-4 text-center">
-          <div className="text-sm text-zinc-300">{formatDate(link.createdAt)}</div>
-          <div className="text-xs text-zinc-500">Created</div>
+        <div className="border-t border-zinc-800 pt-4">
+          <p className="text-sm text-zinc-500 mb-2">Target URL</p>
+          <a
+            href={link.targetUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-white hover:text-zinc-300 transition-colors flex items-center gap-2 break-all group"
+          >
+            {link.targetUrl}
+            <ExternalLink className="w-4 h-4 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
+          </a>
+        </div>
+      </div>
+
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Total Clicks */}
+        <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6 hover:border-zinc-700 transition-all">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="p-2 bg-blue-500/10 rounded-lg">
+              <MousePointer className="w-5 h-5 text-blue-500" />
+            </div>
+            <div className="text-sm text-zinc-500">Total Clicks</div>
+          </div>
+          <div className="text-3xl font-bold">{link.clicks.toLocaleString()}</div>
+        </div>
+
+        {/* Average Daily */}
+        <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6 hover:border-zinc-700 transition-all">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="p-2 bg-green-500/10 rounded-lg">
+              <TrendingUp className="w-5 h-5 text-green-500" />
+            </div>
+            <div className="text-sm text-zinc-500">Avg. Daily</div>
+          </div>
+          <div className="text-3xl font-bold">
+            {analyticsData.length > 0 
+              ? Math.round(link.clicks / analyticsData.length)
+              : 0}
+          </div>
+        </div>
+
+        {/* Created Date */}
+        <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6 hover:border-zinc-700 transition-all">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="p-2 bg-purple-500/10 rounded-lg">
+              <Calendar className="w-5 h-5 text-purple-500" />
+            </div>
+            <div className="text-sm text-zinc-500">Created</div>
+          </div>
+          <div className="text-lg font-semibold">{formatDate(link.createdAt)}</div>
         </div>
 
         {/* Last Clicked */}
-        <div className="bg-zinc-800/40 border border-zinc-700 rounded-lg p-4 text-center">
-          <div className="text-sm text-zinc-300">
-            {link.lastClickedAt ? formatDate(link.lastClickedAt) : '—'}
+        <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6 hover:border-zinc-700 transition-all">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="p-2 bg-orange-500/10 rounded-lg">
+              <Clock className="w-5 h-5 text-orange-500" />
+            </div>
+            <div className="text-sm text-zinc-500">Last Clicked</div>
           </div>
-          <div className="text-xs text-zinc-500">Last Clicked</div>
+          <div className="text-lg font-semibold">
+            {link.lastClickedAt ? formatDate(link.lastClickedAt) : 'Never'}
+          </div>
         </div>
-
       </div>
 
+      {/* Charts Section */}
+      {analyticsData.length > 0 && (
+        <>
+          {/* Bar Chart */}
+          <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6 hover:border-zinc-700 transition-all">
+            <h3 className="text-lg font-semibold mb-6 flex items-center gap-2">
+              <BarChart3 className="w-5 h-5 text-zinc-400" />
+              Daily Clicks
+            </h3>
+            <div className="space-y-3">
+              {analyticsData.map((item, index) => (
+                <div key={index} className="space-y-1">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-zinc-400">
+                      {new Date(item.date).toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                      })}
+                    </span>
+                    <span className="text-white font-semibold">{item.count}</span>
+                  </div>
+                  <div className="w-full bg-zinc-800 rounded-full h-2 overflow-hidden">
+                    <div
+                      className="bg-blue-500 h-full rounded-full transition-all duration-500"
+                      style={{ width: `${(item.count / maxClicks) * 100}%` }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Line Chart (ASCII Style) */}
+          <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6 hover:border-zinc-700 transition-all">
+            <h3 className="text-lg font-semibold mb-6 flex items-center gap-2">
+              <TrendingUp className="w-5 h-5 text-zinc-400" />
+              Click Trend
+            </h3>
+            <div className="relative h-48 flex items-end gap-2">
+              {analyticsData.map((item, index) => (
+                <div key={index} className="flex-1 flex flex-col items-center gap-2">
+                  <div className="relative w-full h-full flex items-end">
+                    <div
+                      className="w-full bg-linear-to-t from-blue-500 to-blue-300 rounded-t transition-all duration-500 hover:from-blue-400 hover:to-blue-200"
+                      style={{ height: `${(item.count / maxClicks) * 100}%` }}
+                    >
+                      <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-semibold text-white">
+                        {item.count}
+                      </div>
+                    </div>
+                  </div>
+                  <span className="text-xs text-zinc-500 text-center">
+                    {new Date(item.date).toLocaleDateString('en-US', {
+                      month: 'short',
+                      day: 'numeric',
+                    })}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Summary Stats */}
+          <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6 hover:border-zinc-700 transition-all">
+            <h3 className="text-lg font-semibold mb-4">Summary</h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div>
+                <p className="text-xs text-zinc-500 mb-1">Peak Day</p>
+                <p className="text-lg font-semibold text-white">
+                  {Math.max(...analyticsData.map(d => d.count))}
+                </p>
+              </div>
+              <div>
+                <p className="text-xs text-zinc-500 mb-1">Total Days</p>
+                <p className="text-lg font-semibold text-white">
+                  {analyticsData.length}
+                </p>
+              </div>
+              <div>
+                <p className="text-xs text-zinc-500 mb-1">First Click</p>
+                <p className="text-lg font-semibold text-white">
+                  {new Date(analyticsData[0].date).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                  })}
+                </p>
+              </div>
+              <div>
+                <p className="text-xs text-zinc-500 mb-1">Latest Click</p>
+                <p className="text-lg font-semibold text-white">
+                  {new Date(analyticsData[analyticsData.length - 1].date).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                  })}
+                </p>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* No Analytics State */}
+      {(!analyticsData || analyticsData.length === 0) && (
+        <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-12 text-center">
+          <BarChart3 className="w-12 h-12 text-zinc-700 mx-auto mb-4" />
+          <h3 className="text-lg font-semibold text-zinc-400 mb-2">No Analytics Data</h3>
+          <p className="text-sm text-zinc-500">
+            Analytics will appear here once people start clicking your link
+          </p>
+        </div>
+      )}
     </div>
   )
 }

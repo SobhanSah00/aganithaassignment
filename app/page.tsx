@@ -18,19 +18,6 @@ export default function Dashboard() {
         </div>
       </header>
 
-      {/* Hero */}
-      <section className="border-b border-zinc-800">
-        <div className="max-w-6xl mx-auto px-6 py-20">
-          <div className="flex items-center gap-2 mb-4">
-            <Zap className="w-6 h-6 text-white" />
-            <h1 className="text-5xl font-bold">TinyLink</h1>
-          </div>
-          <p className="text-xl text-zinc-400 max-w-2xl">
-            Shorten URLs with style. Fast, reliable, and beautifully simple.
-          </p>
-        </div>
-      </section>
-
       {/* Main Content */}
       <main className="max-w-6xl mx-auto px-6 py-12">
         {/* Create Link */}
@@ -51,7 +38,7 @@ export default function Dashboard() {
       {/* Footer */}
       <footer className="border-t border-zinc-800 mt-24">
         <div className="max-w-6xl mx-auto px-6 py-8 text-center text-sm text-zinc-500">
-          Built with Next.js, Prisma, and Tailwind CSS
+          Built By Sobhan with Next.js, Prisma, Postgresql and Tailwind CSS
         </div>
       </footer>
     </div>
