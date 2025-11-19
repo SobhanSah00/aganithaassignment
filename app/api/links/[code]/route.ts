@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/database/db'
 import { codeValidation } from '@/lib/validation'
-import { Prisma } from '@/app/generated/prisma/client'
+import { Prisma } from '@prisma/client'
 
 export async function GET(
     request: NextRequest,

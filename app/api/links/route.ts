@@ -1,4 +1,4 @@
-import { Prisma } from "@/app/generated/prisma/client"
+import { Prisma } from "@prisma/client"
 import { prisma } from "@/database/db"
 import { generateCode } from "@/lib/generateCode"
 import { createLinkValidation } from "@/lib/validation"
