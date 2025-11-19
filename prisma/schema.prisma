@@ -29,7 +29,7 @@ model ClickEvent {
   linkCode  String
   createdAt DateTime @default(now())
 
-  link Link @relation(fields: [linkCode], references: [code])
+  link Link @relation(fields: [linkCode], references: [code], onDelete: Cascade)
 
   @@index([linkCode])
 }
