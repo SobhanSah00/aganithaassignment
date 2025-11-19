@@ -12,6 +12,7 @@ export async function POST(request: NextRequest) {
 
 
         const validated = createLinkValidation.safeParse(body)
+        
         if (!validated.success) {
             return NextResponse.json(
                 { error: validated.error.message },
