@@ -40,7 +40,7 @@ export async function GET(
                 lastClickedAt: new Date(),
             },
         })
-            .catch((error) => {
+            .catch((error:any) => {
                 console.error('Error incrementing clicks:', error)
             })
 
