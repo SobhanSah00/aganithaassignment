@@ -29,7 +29,18 @@ export async function GET(
             })
         }
 
-        prisma.link.update({
+        const clickEvents = await prisma.clickEvent.create({
+            data: { linkCode: code },
+            select : {
+                link : true,
+                id : true
+            }
+        }).catch((err : any) => console.error("Error creating click event:", err));
+
+        console.log(clickEvents);
+        
+
+        await prisma.link.update({
             where: {
                 code
             },
@@ -39,10 +50,10 @@ export async function GET(
                 },
                 lastClickedAt: new Date(),
             },
+        }).catch((error: any) => {
+            console.error('Error incrementing clicks:', error)
         })
-            .catch((error:any) => {
-                console.error('Error incrementing clicks:', error)
-            })
+
 
         return NextResponse.redirect(link.targetUrl, { status: 302 })
 

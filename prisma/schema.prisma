@@ -14,11 +14,22 @@ datasource db {
 }
 
 model Link {
-  code          String    @id @db.VarChar(8)
-  targetUrl     String    @map("target_url") @db.VarChar(1024)
-  clicks        Int       @default(0)
-  createdAt     DateTime  @default(now()) @map("created_at")
-  lastClickedAt DateTime? @map("last_clicked_at")
+  code          String       @id @db.VarChar(8)
+  targetUrl     String       @map("target_url") @db.VarChar(1024)
+  clicks        Int          @default(0)
+  createdAt     DateTime     @default(now()) @map("created_at")
+  lastClickedAt DateTime?    @map("last_clicked_at")
+  clickEvents   ClickEvent[]
 
   @@index([createdAt(sort: Desc)])
+}
+
+model ClickEvent {
+  id        Int      @id @default(autoincrement())
+  linkCode  String
+  createdAt DateTime @default(now())
+
+  link Link @relation(fields: [linkCode], references: [code])
+
+  @@index([linkCode])
 }

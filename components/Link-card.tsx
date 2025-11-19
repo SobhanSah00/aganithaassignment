@@ -19,6 +19,8 @@ interface LinkCardProps {
 }
 
 export function LinkCard({ link }: LinkCardProps) {
+  console.log("alskdjffoasdjofjasdofj : ",link.code);
+  
   const router = useRouter()
   const [isDeleting, setIsDeleting] = useState(false)
   const [copied, setCopied] = useState(false)
@@ -119,7 +121,6 @@ export function LinkCard({ link }: LinkCardProps) {
           </div>
         </div>
 
-        {/* Footer: Timestamps */}
         <div className="flex items-center gap-4 mt-3 pt-3 border-t border-zinc-800">
           <div className="text-xs text-zinc-500">
             Created {formatDate(link.createdAt)}
