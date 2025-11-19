@@ -6,11 +6,13 @@ export async function GET() {
         await prisma.$queryRaw`SELECT 1`
 
         return NextResponse.json({
-            status: 200,
+
             ok: true,
+            version: "1.0",
             timestamp: new Date().toISOString(),
             uptime: process.uptime(),
             database: 'connected',
+            status: 200,
         })
     } catch (error: any) {
         return NextResponse.json(
