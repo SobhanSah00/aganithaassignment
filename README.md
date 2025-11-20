@@ -53,12 +53,14 @@ tinylink/
 │   ├── links-list.tsx                   # List of all links
 │   └── link-stats.tsx                   # Statistics display component
 ├── lib/
-│   ├── prisma.ts                        # Prisma client instance
+│   ├── generateCode.ts                        # Prisma client instance
 │   ├── validations.ts                   # Zod validation schemas
 │   ├── utils.ts                         # Utility functions
 │   └── formatDate.ts                    # Date formatting helper
 ├── prisma/
 │   └── schema.prisma                    # Database schema
+├── database/
+│     └── db.ts                          # Prisma client instance
 ├── .env                                 # Environment variables (local)
 ├── .env.example                         # Example environment variables
 ├── .gitignore                           # Git ignore file
@@ -415,3 +417,4 @@ Future enhancements:
 - Bulk link creation
 - API rate limiting
 - Link categories/tags
+
