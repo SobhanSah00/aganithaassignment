@@ -81,7 +81,7 @@ tinylink/
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/tinylink.git
+git clone https://github.com/SobhanSah00/aganithaassignment.git
 cd tinylink
 ```
 
@@ -385,12 +385,6 @@ npm start
 - CORS headers configured
 - Environment variable protection
 
-## Browser Support
-
-- Chrome (latest)
-- Firefox (latest)
-- Safari (latest)
-- Edge (latest)
 
 ## Contributing
 
