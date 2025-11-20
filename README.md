@@ -53,7 +53,7 @@ tinylink/
 │   ├── links-list.tsx                   # List of all links
 │   └── link-stats.tsx                   # Statistics display component
 ├── lib/
-│   ├── generateCode.ts                        # Prisma client instance
+│   ├── generateCode.ts                  # Random Code Generator 
 │   ├── validations.ts                   # Zod validation schemas
 │   ├── utils.ts                         # Utility functions
 │   └── formatDate.ts                    # Date formatting helper
@@ -417,4 +417,5 @@ Future enhancements:
 - Bulk link creation
 - API rate limiting
 - Link categories/tags
+
 
